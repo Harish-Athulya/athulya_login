@@ -23,5 +23,5 @@ class _AuthPageState extends State<AuthPage> {
 
   void toggle() => setState(() {
         isLogin = !isLogin;
-      });
+  });
 }

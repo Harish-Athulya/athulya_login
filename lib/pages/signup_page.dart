@@ -132,6 +132,11 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Future signUp() async {
+    
+    FocusManager.instance.primaryFocus?.unfocus();
+    focusEmail.unfocus();
+    focusPassword.unfocus();
+
     final isValid = formkey.currentState!.validate();
     if (!isValid) return;
 
@@ -148,30 +153,16 @@ class _SignupPageState extends State<SignupPage> {
     } on FirebaseAuthException catch (e) {
       print(e);
 
-      Utils.showSnackBar(e.message);
-    }
-  }
+      final text = e.message;
+      final snackBar = SnackBar(content: Text(text!));
 
-  Future signIn() async {
-    // print('Hari');
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => Center(
-              child: CircularProgressIndicator(),
-            ));
-
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
-    } on FirebaseAuthException catch (e) {
-      print(e);
+      // Utils.showSnackBar(e.message);
     }
 
-    // navigatorKey.currentState!.popUntil((route) => route.isCurrent);
-    // Navigator.pop(context);
-    Navigator.of(context).pop();
+    Navigator.pop(context);
   }
+
+
 }

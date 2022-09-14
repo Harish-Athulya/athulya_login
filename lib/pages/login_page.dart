@@ -1,4 +1,5 @@
 import 'package:athulya_login/main.dart';
+import 'package:athulya_login/pages/forgot_password_page.dart';
 import 'package:athulya_login/widgets/navigation_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -83,6 +84,22 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(
+                  height: 15,
+                ),
+                GestureDetector(
+                  child: Center(
+                    child: Text(
+                      'Forgot Password?',
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          // color: Theme.of(context).colorScheme.background,
+                          color: Color.fromARGB(255, 29, 102, 142),
+                          fontSize: 20),
+                    ),
+                  ),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ForgotPasswordPage(),),)
+                ),
+                SizedBox(
                   height: 20,
                 ),
                 Center(
@@ -116,18 +133,10 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future signUp() async {
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
-    } on FirebaseAuthException catch (e) {
-      print(e);
-    }
-  }
-
   Future signIn() async {
-    // print('Hari');
+    FocusManager.instance.primaryFocus?.unfocus();
+    focusEmail.unfocus();
+    focusPassword.unfocus();
 
     showDialog(
         context: context,
@@ -142,10 +151,15 @@ class _LoginPageState extends State<LoginPage> {
           password: passwordController.text.trim());
     } on FirebaseAuthException catch (e) {
       print(e);
+
+      final text = e.message;
+      final snackBar = SnackBar(content: Text(text!));
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
 
     // navigatorKey.currentState!.popUntil((route) => route.isCurrent);
-    // Navigator.pop(context);
-    Navigator.of(context).pop();
+    Navigator.pop(context);
+    // Navigator.of(context).pop();
   }
 }
